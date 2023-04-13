@@ -10,23 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_230_413_210_107) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_13_210107) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'comments', force: :cascade do |t|
-    t.text 'content'
-    t.bigint 'post_id', null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['post_id'], name: 'index_comments_on_post_id'
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_comments_on_post_id"
   end
 
-  create_table 'posts', force: :cascade do |t|
-    t.text 'content'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "event_store_events", force: :cascade do |t|
+    t.uuid "event_id", null: false
+    t.string "event_type", null: false
+    t.jsonb "metadata"
+    t.jsonb "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "valid_at"
+    t.index ["created_at"], name: "index_event_store_events_on_created_at"
+    t.index ["event_id"], name: "index_event_store_events_on_event_id", unique: true
+    t.index ["event_type"], name: "index_event_store_events_on_event_type"
+    t.index ["valid_at"], name: "index_event_store_events_on_valid_at"
   end
 
-  add_foreign_key 'comments', 'posts'
+  create_table "event_store_events_in_streams", force: :cascade do |t|
+    t.string "stream", null: false
+    t.integer "position"
+    t.uuid "event_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
+    t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
+    t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "comments", "posts"
 end
