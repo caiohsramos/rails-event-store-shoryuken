@@ -1,24 +1,25 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Env variables needed:
 
-Things you may want to cover:
+- `RAILS_EVENT_STORE_SHORYUKEN_DATABASE_PASSWORD`
+- `AWS_REGION`: us-east-1
+- `AWS_ACCESS_KEY_ID`: test
+- `AWS_SECRET_ACCESS_KEY`: test
+- `SHORYUKEN_SQS_ENDPOINT`: http://localhost:4566
 
-* Ruby version
+---
 
-* System dependencies
+Setup Rails database as usual (Postgres adapter)
 
-* Configuration
+---
 
-* Database creation
+Run Localstack with `docker-compose up`
 
-* Database initialization
+---
 
-* How to run the test suite
+Create queue with `bundle exec shoryuken sqs create test`
 
-* Services (job queues, cache servers, search engines, etc.)
+---
 
-* Deployment instructions
-
-* ...
+Run with `foreman start`
